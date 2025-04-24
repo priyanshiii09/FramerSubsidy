@@ -95,6 +95,7 @@
     .nav-links {
       display: flex;
       list-style: none;
+      flex-wrap: wrap;
     }
     
     .nav-links li {
@@ -145,6 +146,7 @@
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
+      text-decoration: none;
     }
     
     .btn-primary {
@@ -447,6 +449,17 @@
     .social-links a:hover {
       color: white;
     }
+
+    /* Fix for mobile menu */
+    .mobile-menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--dark);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.5rem;
+    }
     
     @media (max-width: 768px) {
       .header-content {
@@ -456,16 +469,41 @@
       
       .nav-container {
         flex-direction: column;
+        padding: 0.5rem 0;
+      }
+      
+      .mobile-menu-toggle {
+        display: block;
+        align-self: flex-end;
+        margin-right: 1rem;
       }
       
       .nav-links {
-        flex-wrap: wrap;
+        flex-direction: column;
+        width: 100%;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+      }
+      
+      .nav-links.active {
+        max-height: 500px;
+      }
+      
+      .nav-links li {
+        width: 100%;
+      }
+      
+      .nav-links a {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--gray);
         justify-content: center;
       }
       
       .auth-buttons {
-        margin-top: 1rem;
-        margin-bottom: 1rem;
+        margin: 1rem 0;
+        justify-content: center;
+        flex-wrap: wrap;
       }
       
       .hero {
@@ -508,6 +546,23 @@
     .btn-cta {
       animation: pulse 2s infinite;
     }
+    
+    /* Fix image placeholder */
+    .hero-image img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+    }
+    
+    /* Fix sign-in and login buttons */
+    .auth-buttons a {
+      text-decoration: none;
+      color: inherit;
+      display: inline-flex;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
   </style>
 </head>
 <body>
@@ -522,17 +577,22 @@
   
   <nav>
     <div class="nav-container">
-      <ul class="nav-links">
+      <button class="mobile-menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+      </button>
+      <ul class="nav-links" id="navLinks">
         <li><a href="/" class="active"><i class="fas fa-home icon"></i>Home</a></li>
         <li><a href="register-farmer.html"><i class="fas fa-user-plus icon"></i>Register Farmer</a></li>
         <li><a href="apply-subsidy.html"><i class="fas fa-file-alt icon"></i>Apply for Subsidy</a></li>
         <li><a href="all-subsidies.html"><i class="fas fa-list-alt icon"></i>View Subsidies</a></li>
         <li><a href="farmer-dashboard.html"><i class="fas fa-chart-line icon"></i>Dashboard</a></li>
+        <li><a href="documents.html"><i class="fas fa-file-alt icon"></i>Documents</a></li>
+        <li><a href="make-payment.html"><i class="fas fa-money-bill-wave icon"></i>Payments</a></li>
       </ul>
       
       <div class="auth-buttons">
-        <button class="btn btn-outline">  <a href="admin-signin.html"><i class="fas fa-sign-in-alt">Signin</i></a> </button>
-        <button class="btn btn-primary"><i class="fas fa-user-plus"> <a href="admin-login.html"> LogIn</a></i></button>
+        <a href="admin-signin.html" class="btn btn-outline"><i class="fas fa-sign-in-alt"></i> SignIn</a>
+        <a href="admin-login.html" class="btn btn-primary"><i class="fas fa-user-plus"></i> LogIn</a>
       </div>
     </div>
   </nav>
@@ -545,16 +605,16 @@
           The Farmer Subsidy System is a government-backed platform designed to streamline the application and disbursement process for agricultural subsidies. Our digital solution connects farmers with available subsidies quickly and efficiently.
         </p>
         <div>
-          <button class="btn btn-primary btn-cta">Get Started <i class="fas fa-arrow-right"></i></button>
-          <button class="btn btn-outline" style="margin-left: 1rem">Learn More</button>
+          <a href="register-farmer.html" class="btn btn-primary btn-cta">Get Started <i class="fas fa-arrow-right"></i></a>
+          <a href="#features" class="btn btn-outline" style="margin-left: 1rem">Learn More</a>
         </div>
       </div>
       <div class="hero-image">
-        <img src="https://plus.unsplash.com/premium_photo-1682092034268-645322c1d308?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8aW5kaWFuJTIwZmFybXxlbnwwfHwwfHx8MA%3D%3D" alt="Farming technology illustration">
+        <img src="https://plus.unsplash.com/premium_photo-1722682240046-29cf0c654744?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Farming technology illustration">
       </div>
     </section>
     
-    <section>
+    <section id="features">
       <h2 class="section-title">Key Features</h2>
       <div class="features">
         <div class="feature-card">
@@ -605,7 +665,7 @@
         <p class="cta-description">
           Join thousands of farmers who have simplified their subsidy application process and maximized their benefits through our platform.
         </p>
-        <button class="btn btn-cta">Register Now</button>
+        <a href="register-farmer.html" class="btn btn-cta">Register Now</a>
       </div>
     </section>
     
@@ -647,22 +707,22 @@
       <div class="footer-section">
         <h3>Quick Links</h3>
         <ul class="footer-links">
-          <li><a href="#">Home</a></li>
-          <li><a href="#">Register Farmer</a></li>
-          <li><a href="#">Available Subsidies</a></li>
-          <li><a href="#">FAQ</a></li>
-          <li><a href="#">Contact Us</a></li>
+          <li><a href="/">Home</a></li>
+          <li><a href="register-farmer.html">Register Farmer</a></li>
+          <li><a href="all-subsidies.html">Available Subsidies</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
         </ul>
       </div>
       
       <div class="footer-section">
         <h3>Subsidy Categories</h3>
         <ul class="footer-links">
-          <li><a href="#">Crop Insurance</a></li>
-          <li><a href="#">Farm Equipment</a></li>
-          <li><a href="#">Irrigation Systems</a></li>
-          <li><a href="#">Organic Farming</a></li>
-          <li><a href="#">Seed Subsidies</a></li>
+          <li><a href="subsidies/crop-insurance.html">Crop Insurance</a></li>
+          <li><a href="subsidies/farm-equipment.html">Farm Equipment</a></li>
+          <li><a href="subsidies/irrigation.html">Irrigation Systems</a></li>
+          <li><a href="subsidies/organic.html">Organic Farming</a></li>
+          <li><a href="subsidies/seeds.html">Seed Subsidies</a></li>
         </ul>
       </div>
       
@@ -686,5 +746,22 @@
       </div>
     </div>
   </footer>
+  
+  <script>
+    // Mobile menu toggle
+    document.getElementById('menuToggle').addEventListener('click', function() {
+      document.getElementById('navLinks').classList.toggle('active');
+    });
+    
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+  </script>
 </body>
 </html>
