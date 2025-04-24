@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Make Payment</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f1f8e9; padding: 20px; }
+    .container {
+      margin: 20px auto;
+      max-width: 600px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      position: relative;
+    }
+    label { font-weight: bold; display: block; margin-top: 1rem; }
+    input {
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 100%;
+    }
+    button {
+      margin-top: 20px;
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover { background-color: #27642a; }
+
+    .popup {
+      display: none;
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #c8e6c9;
+      color: #1b5e20;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      z-index: 10;
+      animation: fadeInOut 3s ease-in-out forwards;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+      10%, 90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Make Payment</h2>
+    <form id="paymentForm">
+      <label for="payment_id">Payment ID:</label>
+      <input type="text" id="payment_id" required>
+
+      <label for="amount_paid">Amount Paid:</label>
+      <input type="number" id="amount_paid" required>
+
+      <label for="farmer_id">Farmer ID:</label>
+      <input type="text" id="farmer_id" required>
+
+      <label for="payment_date">Payment Date:</label>
+      <input type="date" id="payment_date" required>
+
+      <button type="submit">Make Payment</button>
+    </form>
+    <div id="successPopup" class="popup">✅ Payment made successfully!</div>
+  </div>
+
+  <script>
+    document.getElementById('paymentForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const payment_id = document.getElementById('payment_id').value;
+      const amount_paid = document.getElementById('amount_paid').value;
+      const farmer_id = document.getElementById('farmer_id').value;
+      const payment_date = document.getElementById('payment_date').value;
+
+      const response = await fetch('http://localhost:3000/api/payments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ payment_id, amount_paid, farmer_id, payment_date })
+      });
+
+      const popup = document.getElementById('successPopup');
+
+      if (response.ok) {
+        popup.style.display = 'block';
+        document.getElementById('paymentForm').reset();
+        setTimeout(() => {
+          popup.style.display = 'none';
+        }, 3000);
+      } else {
+        alert('❌ Failed to make payment.');
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Apply for Subsidy</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f8e9;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 3rem auto;
+      padding: 2rem;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #2e7d32;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-top: 5px;
+    }
+
+    button {
+      margin-top: 2rem;
+      padding: 12px;
+      background-color: #2e7d32;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #27642a;
+    }
+
+    .notification {
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Apply for Subsidy</h2>
+    <form id="applicationForm">
+      <label for="farmer_id">Farmer ID:</label>
+      <input type="text" id="farmer_id" name="farmer_id" required>
+
+      <label for="application_id">Application ID:</label>
+      <input type="text" id="application_id" name="application_id" required>
+
+      <label for="submission_date">Submission Date:</label>
+      <input type="date" id="submission_date" name="submission_date" required>
+
+      <button type="submit">Submit Application</button>
+      <div id="notification" class="notification"></div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('applicationForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const farmer_id = document.getElementById('farmer_id').value;
+      const application_id = document.getElementById('application_id').value;
+      const submission_date = document.getElementById('submission_date').value;
+
+      const notification = document.getElementById('notification');
+
+      try {
+        const response = await fetch('http://localhost:3000/api/applications', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ farmer_id, application_id, submission_date })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          notification.textContent = '✅ Application submitted successfully!';
+          notification.className = 'notification success';
+          document.getElementById('applicationForm').reset();
+        } else {
+          notification.textContent = `❌ ${result.error || 'Submission failed'}`;
+          notification.className = 'notification error';
+        }
+      } catch (error) {
+        notification.textContent = '❌ Server error. Please try again later.';
+        notification.className = 'notification error';
+      }
+    });
+  </script>
+
+</body>
+</html>

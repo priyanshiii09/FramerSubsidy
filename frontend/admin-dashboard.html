@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f8e9;
+      padding: 20px;
+    }
+    .container {
+      margin: 20px auto;
+      max-width: 1000px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    h2 {
+      text-align: center;
+      color: #2e7d32;
+    }
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+      margin-bottom: 40px;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+    button {
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #27642a;
+    }
+    .table-container {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Admin Dashboard</h2>
+    
+    <!-- Applications Section -->
+    <div class="table-container">
+      <h3>Applications</h3>
+      <table id="applicationsTable">
+        <thead>
+          <tr>
+            <th>Application ID</th>
+            <th>Farmer ID</th>
+            <th>Submission Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Farmers Section -->
+    <div class="table-container">
+      <h3>Farmers</h3>
+      <table id="farmersTable">
+        <thead>
+          <tr>
+            <th>Farmer ID</th>
+            <th>Farmer Name</th>
+            <th>Contact Number</th>
+            <th>Bank Account</th>
+            <th>Aadhar Number</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Admins Section -->
+    <div class="table-container">
+      <h3>Admins</h3>
+      <table id="adminsTable">
+        <thead>
+          <tr>
+            <th>Admin ID</th>
+            <th>Admin Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Contact Number</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Payments Section -->
+    <div class="table-container">
+      <h3>Payments</h3>
+      <table id="paymentsTable">
+        <thead>
+          <tr>
+            <th>Payment ID</th>
+            <th>Amount Paid</th>
+            <th>Farmer ID</th>
+            <th>Payment Date</th>
+            <th>Payment Status</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    window.onload = async function() {
+      const response = await fetch('http://localhost:3000/api/admin-dashboard');
+      const data = await response.json();
+
+      if (response.ok) {
+        renderTable('applicationsTable', data.applications);
+        renderTable('farmersTable', data.farmers);
+        renderTable('adminsTable', data.admins);
+        renderTable('paymentsTable', data.payments);
+      } else {
+        alert('Error fetching data');
+      }
+    };
+
+    function renderTable(tableId, data) {
+      const tableBody = document.getElementById(tableId).getElementsByTagName('tbody')[0];
+      tableBody.innerHTML = ''; // Clear existing rows
+
+      data.forEach(item => {
+        let row = tableBody.insertRow();
+        for (let key in item) {
+          let cell = row.insertCell();
+          // If it's a date, format it
+          if (key.includes('date')) {
+            const formattedDate = new Date(item[key]).toLocaleDateString();
+            cell.textContent = formattedDate;
+          } else {
+            cell.textContent = item[key];
+          }
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

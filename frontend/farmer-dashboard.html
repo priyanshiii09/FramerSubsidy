@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Farmer Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f1f8e9; padding: 20px; }
+    .container { max-width: 800px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    h2, h3 { color: #2e7d32; }
+    .info div { margin: 8px 0; }
+    table { width: 100%; margin-top: 20px; border-collapse: collapse; }
+    th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+    th { background-color: #2e7d32; color: white; }
+    input, button {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      width: 100%;
+    }
+    button {
+      background-color: #2e7d32;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #27642a;
+    }
+    #farmerSection, #applicationsSection { display: none; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Farmer Dashboard</h2>
+    <form id="farmerForm">
+      <label for="farmerIdInput">Enter Farmer ID:</label>
+      <input type="number" id="farmerIdInput" required>
+      <button type="submit">View Dashboard</button>
+    </form>
+
+    <div id="farmerSection">
+      <h3>Farmer Details</h3>
+      <div class="info" id="farmerInfo"></div>
+    </div>
+
+    <div id="applicationsSection">
+      <h3>Submitted Applications</h3>
+      <table id="applicationsTable">
+        <thead>
+          <tr>
+            <th>Application ID</th>
+            <th>Submission Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('farmerForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const farmerId = document.getElementById('farmerIdInput').value;
+
+      try {
+        const res = await fetch(`http://localhost:3000/api/farmer-dashboard/${farmerId}`);
+        const data = await res.json();
+
+        if (res.status !== 200) {
+          alert(data.error || 'Farmer not found.');
+          return;
+        }
+
+        document.getElementById('farmerSection').style.display = 'block';
+        document.getElementById('applicationsSection').style.display = 'block';
+
+        const farmerInfo = document.getElementById('farmerInfo');
+        farmerInfo.innerHTML = `
+          <div><strong>Name:</strong> ${data.farmer.name}</div>
+          <div><strong>Contact:</strong> ${data.farmer.contact}</div>
+          <div><strong>Location:</strong> ${data.farmer.location}</div>
+        `;
+
+        const tableBody = document.querySelector('#applicationsTable tbody');
+        tableBody.innerHTML = '';
+        data.applications.forEach(app => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${app.application_id}</td>
+            <td>${new Date(app.submission_date).toLocaleDateString()}</td>
+            <td>${app.status}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+
+      } catch (err) {
+        alert('Error loading dashboard.');
+        console.error(err);
+      }
+    });
+  </script>
+
+</body>
+</html>

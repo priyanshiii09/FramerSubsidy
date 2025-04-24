@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Subsidies</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f1f8e9; padding: 20px; }
+    .container { margin: 20px auto; max-width: 900px; background: white; padding: 20px; border-radius: 10px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+    th { background-color: #2e7d32; color: white; }
+    td { text-align: center; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>All Subsidies</h2>
+    <table id="subsidiesTable">
+      <thead>
+        <tr>
+          <th>Subsidy Name</th>
+          <th>Amount</th>
+          <th>Eligibility Criteria (Age)</th>
+          <th>Application Deadline</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Data will be populated by JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    async function loadSubsidies() {
+      const response = await fetch('http://localhost:3000/api/subsidies');
+      const subsidies = await response.json();
+      console.log(subsidies);
+
+      const tableBody = document.querySelector('#subsidiesTable tbody');
+      tableBody.innerHTML = '';
+
+      subsidies.forEach(subsidy => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${subsidy.name}</td>
+          <td>${subsidy.amount}</td>
+          <td>${subsidy.eligibility_criteria}</td>
+          <td>${new Date(subsidy.application_deadline).toLocaleDateString()}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    loadSubsidies();
+  </script>
+
+</body>
+</html>

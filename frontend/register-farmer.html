@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register Farmer</title>
+  <link rel="stylesheet" href="register-farmer.css" />
+</head>
+<body>
+
+  <div class="container">
+    <h1>Register New Farmer</h1>
+    <form id="farmerForm">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required />
+
+      <label for="contact">Contact Number:</label>
+      <input type="text" id="contact" name="contact" required />
+
+      <label for="bank">Bank Account:</label>
+      <input type="text" id="bank" name="bank" required />
+
+      <label for="farmer_id">Farmer ID:</label>
+      <input type="text" id="farmer_id" name="farmer_id" required />
+
+      <label for="aadhar">Aadhar Number:</label>
+      <input type="text" id="aadhar" name="aadhar" required />
+
+      <button type="submit">Register Farmer</button>
+    </form>
+
+    <div id="notification" class="hidden"></div>
+  </div>
+
+  <script src="register-farmer.js"></script>
+</body>
+</html>

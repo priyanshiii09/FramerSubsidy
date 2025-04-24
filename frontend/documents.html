@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Documents</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f1f8e9; padding: 20px; }
+    .container { margin: 20px auto; max-width: 900px; background: white; padding: 20px; border-radius: 10px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+    th { background-color: #2e7d32; color: white; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>All Documents</h2>
+    <table id="documentsTable">
+      <thead>
+        <tr>
+          <th>Document ID</th>
+          <th>Document Type</th>
+          <th>Application Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Data will be populated by JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    async function loadDocuments() {
+      const response = await fetch('http://localhost:3000/api/documents');
+      const documents = await response.json();
+      const tableBody = document.querySelector('#documentsTable tbody');
+      tableBody.innerHTML = '';
+      documents.forEach(doc => {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${doc.document_id}</td><td>${doc.document_type}</td><td>${doc.application_type}</td>`;
+        tableBody.appendChild(row);
+      });
+    }
+
+    loadDocuments();
+  </script>
+
+</body>
+</html>
